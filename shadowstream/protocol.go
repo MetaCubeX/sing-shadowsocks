@@ -16,6 +16,7 @@ import (
 	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
 
+	"github.com/aead/chacha20/chacha"
 	"golang.org/x/crypto/chacha20"
 )
 
@@ -29,6 +30,7 @@ var List = []string{
 	"rc4-md5",
 	"chacha20-ietf",
 	"xchacha20",
+	"chacha20",
 }
 
 type Method struct {
@@ -107,6 +109,15 @@ func New(method string, key []byte, password string) (shadowsocks.Method, error)
 		}
 		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
 			return chacha20.NewUnauthenticatedCipher(key, salt)
+		}
+	case "chacha20":
+		m.keyLength = chacha.KeySize
+		m.saltLength = chacha.NonceSize
+		m.encryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
+			return chacha.NewCipher(salt, key, 20)
+		}
+		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
+			return chacha.NewCipher(salt, key, 20)
 		}
 	default:
 		return nil, os.ErrInvalid

@@ -36,6 +36,6 @@ jobs:
           mkdir build
           pushd build
           go mod init build
-          go get -v github.com/sagernet/sing-shadowsocks@$version
+          go get -v github.com/metacubex/sing-shadowsocks@$version
           popd
           go test -v ./...

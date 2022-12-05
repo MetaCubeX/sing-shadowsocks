@@ -1,4 +1,4 @@
-module github.com/sagernet/sing-shadowsocks
+module github.com/metacubex/sing-shadowsocks
 
 go 1.18
 

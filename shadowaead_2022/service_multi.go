@@ -12,8 +12,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/sagernet/sing-shadowsocks"
-	"github.com/sagernet/sing-shadowsocks/shadowaead"
+	"github.com/metacubex/sing-shadowsocks"
+	"github.com/metacubex/sing-shadowsocks/shadowaead"
 	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/auth"
 	"github.com/sagernet/sing/common/buf"

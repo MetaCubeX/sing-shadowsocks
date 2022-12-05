@@ -1,10 +1,10 @@
 package shadowimpl
 
 import (
-	"github.com/sagernet/sing-shadowsocks"
-	"github.com/sagernet/sing-shadowsocks/shadowaead"
-	"github.com/sagernet/sing-shadowsocks/shadowaead_2022"
-	"github.com/sagernet/sing-shadowsocks/shadowstream"
+	"github.com/metacubex/sing-shadowsocks"
+	"github.com/metacubex/sing-shadowsocks/shadowaead"
+	"github.com/metacubex/sing-shadowsocks/shadowaead_2022"
+	"github.com/metacubex/sing-shadowsocks/shadowstream"
 	"github.com/sagernet/sing/common"
 	E "github.com/sagernet/sing/common/exceptions"
 )

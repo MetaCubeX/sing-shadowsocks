@@ -7,7 +7,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/sagernet/sing-shadowsocks"
+	"github.com/metacubex/sing-shadowsocks"
 	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/buf"
 	"github.com/sagernet/sing/common/bufio"

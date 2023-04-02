@@ -19,6 +19,13 @@ const (
 	// Overhead
 	// crypto/cipher.gcmTagSize
 	// golang.org/x/crypto/chacha20poly1305.Overhead
+	// github.com/sina-ghaderi/poly1305.TagSize
+	// github.com/ericlagergren/siv.TagSize
+	// github.com/ericlagergren/aegis.TagSize128L
+	// github.com/ericlagergren/aegis.TagSize256
+	// github.com/ericlagergren/lwcrypto/ascon.TagSize
+	// github.com/Yawning/aez.aeadOverhead
+	// github.com/oasisprotocol/deoxysii.TagSize
 	Overhead = 16
 )
 

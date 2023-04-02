@@ -15,6 +15,13 @@ import (
 	N "github.com/sagernet/sing/common/network"
 	"github.com/sagernet/sing/common/rw"
 
+	"github.com/RyuaNerin/go-krypto/lea"
+	"github.com/Yawning/aez"
+	"github.com/ericlagergren/aegis"
+	"github.com/ericlagergren/lwcrypto/ascon"
+	"github.com/ericlagergren/siv"
+	"github.com/oasisprotocol/deoxysii"
+	"github.com/sina-ghaderi/rabaead"
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/crypto/hkdf"
 )
@@ -25,6 +32,19 @@ var List = []string{
 	"aes-256-gcm",
 	"chacha20-ietf-poly1305",
 	"xchacha20-ietf-poly1305",
+	// began not standard methods
+	"rabbit128-poly1305",
+	"aes-128-gcm-siv",
+	"aes-256-gcm-siv",
+	"aegis-128l",
+	"aegis-256",
+	"ascon-128",
+	"ascon-128a",
+	"aez-384",
+	"deoxys-ii-256-128",
+	"lea-128-gcm",
+	"lea-192-gcm",
+	"lea-256-gcm",
 }
 
 var _ shadowsocks.Method = (*Method)(nil)
@@ -49,6 +69,42 @@ func New(method string, key []byte, password string) (*Method, error) {
 	case "xchacha20-ietf-poly1305":
 		m.keySaltLength = 32
 		m.constructor = chacha20poly1305.NewX
+	case "rabbit128-poly1305":
+		m.keySaltLength = 16
+		m.constructor = rabaead.NewAEAD
+	case "aes-128-gcm-siv":
+		m.keySaltLength = 16
+		m.constructor = siv.NewGCM
+	case "aes-256-gcm-siv":
+		m.keySaltLength = 32
+		m.constructor = siv.NewGCM
+	case "aegis-128l":
+		m.keySaltLength = 16
+		m.constructor = aegis.New
+	case "aegis-256":
+		m.keySaltLength = 32
+		m.constructor = aegis.New
+	case "ascon-128":
+		m.keySaltLength = 16
+		m.constructor = ascon.New128
+	case "ascon-128a":
+		m.keySaltLength = 16
+		m.constructor = ascon.New128a
+	case "aez-384":
+		m.keySaltLength = 3 * 16
+		m.constructor = aez.New
+	case "deoxys-ii-256-128":
+		m.keySaltLength = 32
+		m.constructor = deoxysii.New
+	case "lea-128-gcm":
+		m.keySaltLength = 16
+		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
+	case "lea-192-gcm":
+		m.keySaltLength = 24
+		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
+	case "lea-256-gcm":
+		m.keySaltLength = 32
+		m.constructor = aeadCipher(lea.NewCipher, cipher.NewGCM)
 	}
 	if len(key) == m.keySaltLength {
 		m.key = key

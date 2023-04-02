@@ -2,8 +2,6 @@ package shadowaead
 
 import (
 	"context"
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/rand"
 	"io"
 	"net"
@@ -19,8 +17,6 @@ import (
 	N "github.com/sagernet/sing/common/network"
 	"github.com/sagernet/sing/common/rw"
 	"github.com/sagernet/sing/common/udpnat"
-
-	"golang.org/x/crypto/chacha20poly1305"
 )
 
 var ErrBadHeader = E.New("bad header")
@@ -28,46 +24,21 @@ var ErrBadHeader = E.New("bad header")
 var _ shadowsocks.Service = (*Service)(nil)
 
 type Service struct {
-	name          string
-	keySaltLength int
-	constructor   func(key []byte) (cipher.AEAD, error)
-	key           []byte
-	password      string
-	handler       shadowsocks.Handler
-	udpNat        *udpnat.Service[netip.AddrPort]
+	*Method
+	password string
+	handler  shadowsocks.Handler
+	udpNat   *udpnat.Service[netip.AddrPort]
 }
 
 func NewService(method string, key []byte, password string, udpTimeout int64, handler shadowsocks.Handler) (*Service, error) {
+	m, err := New(method, key, password)
+	if err != nil {
+		return nil, err
+	}
 	s := &Service{
-		name:    method,
+		Method:  m,
 		handler: handler,
 		udpNat:  udpnat.New[netip.AddrPort](udpTimeout, handler),
-	}
-	switch method {
-	case "aes-128-gcm":
-		s.keySaltLength = 16
-		s.constructor = aeadCipher(aes.NewCipher, cipher.NewGCM)
-	case "aes-192-gcm":
-		s.keySaltLength = 24
-		s.constructor = aeadCipher(aes.NewCipher, cipher.NewGCM)
-	case "aes-256-gcm":
-		s.keySaltLength = 32
-		s.constructor = aeadCipher(aes.NewCipher, cipher.NewGCM)
-	case "chacha20-ietf-poly1305":
-		s.keySaltLength = 32
-		s.constructor = chacha20poly1305.New
-	case "xchacha20-ietf-poly1305":
-		s.keySaltLength = 32
-		s.constructor = chacha20poly1305.NewX
-	}
-	if len(key) == s.keySaltLength {
-		s.key = key
-	} else if len(key) > 0 {
-		return nil, shadowsocks.ErrBadKey
-	} else if password != "" {
-		s.key = shadowsocks.Key([]byte(password), s.keySaltLength)
-	} else {
-		return nil, shadowsocks.ErrMissingPassword
 	}
 	return s, nil
 }

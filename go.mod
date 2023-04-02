@@ -9,9 +9,9 @@ require (
 	github.com/ericlagergren/aegis v0.0.0-20230312195928-b4ce538b56f9
 	github.com/ericlagergren/siv v0.0.0-20220507050439-0b757b3aa5f1
 	github.com/oasisprotocol/deoxysii v0.0.0-20220228165953-2091330c22b7
-	github.com/sagernet/sing v0.1.7
+	github.com/sagernet/sing v0.2.0
 	github.com/sina-ghaderi/rabaead v0.0.0-20220730151906-ab6e06b96e8c
-	golang.org/x/crypto v0.6.0
+	golang.org/x/crypto v0.7.0
 	lukechampine.com/blake3 v1.1.7
 )
 

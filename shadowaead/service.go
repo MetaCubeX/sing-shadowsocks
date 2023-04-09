@@ -12,6 +12,7 @@ import (
 	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/buf"
 	"github.com/sagernet/sing/common/bufio"
+	"github.com/sagernet/sing/common/bufio/deadline"
 	E "github.com/sagernet/sing/common/exceptions"
 	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
@@ -96,11 +97,11 @@ func (s *Service) newConnection(ctx context.Context, conn net.Conn, metadata M.M
 	metadata.Protocol = "shadowsocks"
 	metadata.Destination = destination
 
-	return s.handler.NewConnection(ctx, &serverConn{
+	return s.handler.NewConnection(ctx, deadline.NewConn(&serverConn{
 		Service: s,
 		Conn:    conn,
 		reader:  reader,
-	}, metadata)
+	}), metadata)
 }
 
 func (s *Service) NewError(ctx context.Context, err error) {

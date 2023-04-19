@@ -382,6 +382,10 @@ func (c *serverConn) Close() error {
 	)
 }
 
+func (c *serverConn) NeedAdditionalReadDeadline() bool {
+	return true
+}
+
 func (c *serverConn) Upstream() any {
 	return c.Conn
 }

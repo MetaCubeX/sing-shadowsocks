@@ -13,7 +13,6 @@ import (
 	"github.com/metacubex/sing-shadowsocks"
 	"github.com/sagernet/sing/common"
 	"github.com/sagernet/sing/common/buf"
-	"github.com/sagernet/sing/common/bufio/deadline"
 	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
 
@@ -155,15 +154,15 @@ func (m *Method) DialConn(conn net.Conn, destination M.Socksaddr) (net.Conn, err
 		Conn:        conn,
 		destination: destination,
 	}
-	return deadline.NewConn(shadowsocksConn), shadowsocksConn.writeRequest()
+	return shadowsocksConn, shadowsocksConn.writeRequest()
 }
 
 func (m *Method) DialEarlyConn(conn net.Conn, destination M.Socksaddr) net.Conn {
-	return deadline.NewConn(&clientConn{
+	return &clientConn{
 		Method:      m,
 		Conn:        conn,
 		destination: destination,
-	})
+	}
 }
 
 func (m *Method) DialPacketConn(conn net.Conn) N.NetPacketConn {

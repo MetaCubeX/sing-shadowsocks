@@ -31,8 +31,9 @@ import (
 )
 
 var (
-	ErrNoPadding  = E.New("bad request: missing payload or padding")
-	ErrBadPadding = E.New("bad request: damaged padding")
+	ErrInvalidRequest = E.New("invalid request")
+	ErrNoPadding      = E.New("bad request: missing payload or padding")
+	ErrBadPadding     = E.New("bad request: damaged padding")
 )
 
 var _ shadowsocks.Service = (*Service)(nil)
@@ -286,7 +287,7 @@ func (c *serverConn) writeResponse(payload []byte) (n int, err error) {
 	common.Must1(headerFixedChunk.Write(c.requestSalt))
 	common.Must(binary.Write(headerFixedChunk, binary.BigEndian, uint16(payloadLen)))
 
-	writer.WriteChunk(header, headerFixedChunk.Slice())
+	writer.WriteChunk(header, headerFixedChunk.Bytes())
 	headerFixedChunk.Release()
 	c.requestSalt = nil
 

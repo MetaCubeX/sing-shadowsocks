@@ -28,6 +28,8 @@ import (
 	"github.com/sagernet/sing/common/random"
 	"github.com/sagernet/sing/common/rw"
 
+	"github.com/metacubex/chacha"
+	"gitlab.com/go-extension/aes-ccm"
 	"golang.org/x/crypto/chacha20poly1305"
 	"lukechampine.com/blake3"
 )
@@ -58,6 +60,10 @@ var List = []string{
 	"2022-blake3-aes-128-gcm",
 	"2022-blake3-aes-256-gcm",
 	"2022-blake3-chacha20-poly1305",
+	// began not standard methods
+	"2022-blake3-chacha8-poly1305",
+	"2022-blake3-aes-128-ccm",
+	"2022-blake3-aes-256-ccm",
 }
 
 func init() {
@@ -102,6 +108,20 @@ func New(method string, pskList [][]byte, timeFunc func() time.Time) (shadowsock
 		}
 		m.keySaltLength = 32
 		m.constructor = chacha20poly1305.New
+	case "2022-blake3-chacha8-poly1305":
+		if len(pskList) > 1 {
+			return nil, os.ErrInvalid
+		}
+		m.keySaltLength = 32
+		m.constructor = chacha.NewChaCha20IETFPoly1305
+	case "2022-blake3-aes-128-ccm":
+		m.keySaltLength = 16
+		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
+		m.blockConstructor = aes.NewCipher
+	case "2022-blake3-aes-256-ccm":
+		m.keySaltLength = 32
+		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
+		m.blockConstructor = aes.NewCipher
 	}
 
 	if len(pskList) == 0 {
@@ -130,7 +150,7 @@ func New(method string, pskList [][]byte, timeFunc func() time.Time) (shadowsock
 
 	var err error
 	switch method {
-	case "2022-blake3-aes-128-gcm", "2022-blake3-aes-256-gcm":
+	case "2022-blake3-aes-128-gcm", "2022-blake3-aes-256-gcm", "2022-blake3-aes-128-ccm", "2022-blake3-aes-256-ccm":
 		m.udpBlockEncryptCipher, err = aes.NewCipher(pskList[0])
 		if err != nil {
 			return nil, err
@@ -141,6 +161,11 @@ func New(method string, pskList [][]byte, timeFunc func() time.Time) (shadowsock
 		}
 	case "2022-blake3-chacha20-poly1305":
 		m.udpCipher, err = chacha20poly1305.NewX(pskList[0])
+		if err != nil {
+			return nil, err
+		}
+	case "2022-blake3-chacha8-poly1305":
+		m.udpCipher, err = chacha.NewXChaCha8IETFPoly1305(m.pskList[0])
 		if err != nil {
 			return nil, err
 		}

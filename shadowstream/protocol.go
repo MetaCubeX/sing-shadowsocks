@@ -16,7 +16,7 @@ import (
 	M "github.com/sagernet/sing/common/metadata"
 	N "github.com/sagernet/sing/common/network"
 
-	"github.com/aead/chacha20/chacha"
+	"github.com/metacubex/chacha"
 	"golang.org/x/crypto/chacha20"
 )
 
@@ -113,12 +113,8 @@ func New(method string, key []byte, password string) (shadowsocks.Method, error)
 	case "chacha20":
 		m.keyLength = chacha.KeySize
 		m.saltLength = chacha.NonceSize
-		m.encryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha.NewCipher(salt, key, 20)
-		}
-		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha.NewCipher(salt, key, 20)
-		}
+		m.encryptConstructor = chacha.NewChaCha20
+		m.decryptConstructor = chacha.NewChaCha20
 	default:
 		return nil, os.ErrInvalid
 	}

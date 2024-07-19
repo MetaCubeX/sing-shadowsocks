@@ -27,6 +27,8 @@ import (
 	"github.com/sagernet/sing/common/replay"
 	"github.com/sagernet/sing/common/udpnat"
 
+	"github.com/metacubex/chacha"
+	"gitlab.com/go-extension/aes-ccm"
 	"golang.org/x/crypto/chacha20poly1305"
 )
 
@@ -92,6 +94,17 @@ func NewService(method string, psk []byte, udpTimeout int64, handler shadowsocks
 	case "2022-blake3-chacha20-poly1305":
 		s.keySaltLength = 32
 		s.constructor = chacha20poly1305.New
+	case "2022-blake3-chacha8-poly1305":
+		s.keySaltLength = 32
+		s.constructor = chacha.NewChaCha20IETFPoly1305
+	case "2022-blake3-aes-128-ccm":
+		s.keySaltLength = 16
+		s.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
+		s.blockConstructor = aes.NewCipher
+	case "2022-blake3-aes-256-ccm":
+		s.keySaltLength = 32
+		s.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })
+		s.blockConstructor = aes.NewCipher
 	default:
 		return nil, os.ErrInvalid
 	}
@@ -108,10 +121,12 @@ func NewService(method string, psk []byte, udpTimeout int64, handler shadowsocks
 
 	var err error
 	switch method {
-	case "2022-blake3-aes-128-gcm", "2022-blake3-aes-256-gcm":
+	case "2022-blake3-aes-128-gcm", "2022-blake3-aes-256-gcm", "2022-blake3-aes-128-ccm", "2022-blake3-aes-256-ccm":
 		s.udpBlockCipher, err = aes.NewCipher(psk)
 	case "2022-blake3-chacha20-poly1305":
 		s.udpCipher, err = chacha20poly1305.NewX(psk)
+	case "2022-blake3-chacha8-poly1305":
+		s.udpCipher, err = chacha.NewXChaCha8IETFPoly1305(psk)
 	}
 	if err != nil {
 		return nil, err

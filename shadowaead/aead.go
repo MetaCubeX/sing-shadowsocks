@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/sagernet/sing/common/buf"
+	"github.com/metacubex/sing/common/buf"
 )
 
 // https://shadowsocks.org/en/wiki/AEAD-Ciphers.html

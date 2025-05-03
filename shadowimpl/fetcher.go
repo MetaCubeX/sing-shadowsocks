@@ -7,8 +7,8 @@ import (
 	"github.com/metacubex/sing-shadowsocks/shadowaead"
 	"github.com/metacubex/sing-shadowsocks/shadowaead_2022"
 	"github.com/metacubex/sing-shadowsocks/shadowstream"
-	"github.com/sagernet/sing/common"
-	E "github.com/sagernet/sing/common/exceptions"
+	"github.com/metacubex/sing/common"
+	E "github.com/metacubex/sing/common/exceptions"
 )
 
 func FetchMethod(method string, password string, timeFunc func() time.Time) (shadowsocks.Method, error) {

@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	"github.com/metacubex/sing-shadowsocks/shadowaead_2022"
-	"github.com/sagernet/sing/common"
-	E "github.com/sagernet/sing/common/exceptions"
-	M "github.com/sagernet/sing/common/metadata"
+	"github.com/metacubex/sing/common"
+	E "github.com/metacubex/sing/common/exceptions"
+	M "github.com/metacubex/sing/common/metadata"
 )
 
 func TestService(t *testing.T) {

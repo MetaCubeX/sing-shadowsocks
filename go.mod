@@ -8,7 +8,7 @@ require (
 	github.com/ericlagergren/aegis v0.0.0-20250325060835-cd0defd64358
 	github.com/ericlagergren/siv v0.0.0-20220507050439-0b757b3aa5f1
 	github.com/metacubex/chacha v0.1.2
-	github.com/metacubex/sing v0.5.2
+	github.com/metacubex/sing v0.5.3
 	github.com/oasisprotocol/deoxysii v0.0.0-20220228165953-2091330c22b7
 	github.com/sina-ghaderi/rabaead v0.0.0-20220730151906-ab6e06b96e8c
 	gitlab.com/go-extension/aes-ccm v0.0.0-20230221065045-e58665ef23c7

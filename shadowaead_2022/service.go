@@ -96,7 +96,7 @@ func NewService(method string, psk []byte, udpTimeout int64, handler shadowsocks
 		s.constructor = chacha20poly1305.New
 	case "2022-blake3-chacha8-poly1305":
 		s.keySaltLength = 32
-		s.constructor = chacha.NewChaCha20IETFPoly1305
+		s.constructor = chacha.NewChaCha8IETFPoly1305
 	case "2022-blake3-aes-128-ccm":
 		s.keySaltLength = 16
 		s.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })

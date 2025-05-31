@@ -113,7 +113,7 @@ func New(method string, pskList [][]byte, timeFunc func() time.Time) (shadowsock
 			return nil, os.ErrInvalid
 		}
 		m.keySaltLength = 32
-		m.constructor = chacha.NewChaCha20IETFPoly1305
+		m.constructor = chacha.NewChaCha8IETFPoly1305
 	case "2022-blake3-aes-128-ccm":
 		m.keySaltLength = 16
 		m.constructor = aeadCipher(aes.NewCipher, func(cipher cipher.Block) (cipher.AEAD, error) { return ccm.NewCCM(cipher) })

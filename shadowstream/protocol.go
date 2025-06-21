@@ -17,7 +17,6 @@ import (
 	N "github.com/metacubex/sing/common/network"
 
 	"github.com/metacubex/chacha"
-	"golang.org/x/crypto/chacha20"
 )
 
 var List = []string{
@@ -93,31 +92,31 @@ func New(method string, key []byte, password string) (shadowsocks.Method, error)
 			return rc4.NewCipher(h.Sum(nil))
 		}
 	case "chacha20-ietf":
-		m.keyLength = chacha20.KeySize
-		m.saltLength = chacha20.NonceSize
+		m.keyLength = chacha.KeySize
+		m.saltLength = chacha.INonceSize
 		m.encryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha20.NewUnauthenticatedCipher(key, salt)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha20.NewUnauthenticatedCipher(key, salt)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 	case "xchacha20":
-		m.keyLength = chacha20.KeySize
-		m.saltLength = chacha20.NonceSizeX
+		m.keyLength = chacha.KeySize
+		m.saltLength = chacha.XNonceSize
 		m.encryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha20.NewUnauthenticatedCipher(key, salt)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha20.NewUnauthenticatedCipher(key, salt)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 	case "chacha20":
 		m.keyLength = chacha.KeySize
 		m.saltLength = chacha.NonceSize
 		m.encryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha.NewChaCha20(salt, key)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 		m.decryptConstructor = func(key []byte, salt []byte) (cipher.Stream, error) {
-			return chacha.NewChaCha20(salt, key)
+			return chacha.NewChaCha20IgnoreCounterOverflow(salt, key)
 		}
 	default:
 		return nil, os.ErrInvalid

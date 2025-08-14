@@ -28,10 +28,10 @@ import (
 	"github.com/metacubex/sing/common/random"
 	"github.com/metacubex/sing/common/rw"
 
+	"github.com/metacubex/blake3"
 	"github.com/metacubex/chacha"
 	"gitlab.com/go-extension/aes-ccm"
 	"golang.org/x/crypto/chacha20poly1305"
-	"lukechampine.com/blake3"
 )
 
 const (

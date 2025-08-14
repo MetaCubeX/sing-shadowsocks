@@ -23,7 +23,7 @@ import (
 	N "github.com/metacubex/sing/common/network"
 	"github.com/metacubex/sing/common/rw"
 
-	"lukechampine.com/blake3"
+	"github.com/metacubex/blake3"
 )
 
 var _ shadowsocks.MultiService[int] = (*MultiService[int])(nil)

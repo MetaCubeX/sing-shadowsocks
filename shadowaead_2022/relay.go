@@ -19,7 +19,7 @@ import (
 	N "github.com/metacubex/sing/common/network"
 	"github.com/metacubex/sing/common/udpnat"
 
-	"lukechampine.com/blake3"
+	"github.com/metacubex/blake3"
 )
 
 var _ shadowsocks.Service = (*RelayService[int])(nil)

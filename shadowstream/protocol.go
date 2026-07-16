@@ -41,7 +41,9 @@ type Method struct {
 	key                []byte
 }
 
-func New(method string, key []byte, password string) (shadowsocks.Method, error) {
+var _ shadowsocks.Method = (*Method)(nil)
+
+func New(method string, key []byte, password string) (*Method, error) {
 	m := &Method{
 		name: method,
 	}

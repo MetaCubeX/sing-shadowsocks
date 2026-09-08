@@ -87,6 +87,10 @@ func (c *noneConn) WriteBuffer(buffer *buf.Buffer) error {
 	return common.Error(c.Conn.Write(buffer.Bytes()))
 }
 
+func (c *noneConn) NeedHandshake() bool {
+	return !c.handshake
+}
+
 func (c *noneConn) FrontHeadroom() int {
 	if !c.handshake {
 		return M.SocksaddrSerializer.AddrPortLen(c.destination)
